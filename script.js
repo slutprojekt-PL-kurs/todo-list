@@ -1,11 +1,4 @@
 /* Firebase */
-import { initializeApp } from 'firebase/app';
-import { getDatabase } from "firebase/database";
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-let database = firebase.database();
-
-
 
 
 const firebaseConfig = {
@@ -18,27 +11,26 @@ const firebaseConfig = {
     appId: "1:1089764169541:web:824a50162eab726448502c",
     measurementId: "G-ZHC77BMQQE"
   };
+  firebase.initializeApp(firebaseConfig);
+
+  let database = firebase.database();
 // Initialize Firebase
-
-
-
-
-
-
-
+let ref = database.ref('todos');
 
 function writeUserData(userId, name, email, imageUrl) {
-    database.database().ref('users/' + userId).set({
+    console.log("test");
+    ref.set({
       username: name,
       email: email,
       profile_picture : imageUrl
     });
+
   }
 
-  writeUserData(1,"test","test@gmail.com","test.img");
+  writeUserData(1,"test4","test@gmail.com","test.img");
 
 
- let ref = database.ref('todos');
+
 
 document.addEventListener("DOMContentLoaded", function(){
     const addTodoButton = document.getElementById("add-todo")
