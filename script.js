@@ -1,6 +1,6 @@
 /* Firebase */
 import { initializeApp } from 'firebase/app';
-
+console.log("hej");
 const firebaseConfig = {
     apiKey: "AIzaSyA41vqCO9CIDICVD_YUAzwknHZ-0gzDByA",
     authDomain: "slutuppgift-cd6fc.firebaseapp.com",
