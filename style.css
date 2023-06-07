@@ -25,3 +25,13 @@ li.todo-done {
   text-decoration: line-through;
   color: gray;
 }
+
+.display-things{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  margin: 1.5rem;
+}
+#header-display{
+font-size: x-large;
+}
