@@ -17,7 +17,7 @@ let database = firebase.database();
 let ref = database.ref("todos");
 
 function writeUserData(title, description, endDate) {
-  ref.set({
+  ref.push({
     title: title,
     description: description,
     endDate: endDate,
