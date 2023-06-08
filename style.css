@@ -35,3 +35,27 @@ li.todo-done {
 #header-display{
 font-size: x-large;
 }
+
+.done-button, .delete-button, .update-button {
+  height: 30px;
+  width: 30%;
+  margin: 5px;
+
+  box-shadow: 1px 1px 5px 0px gray;
+  border-radius: 5px;
+  border: solid 1px darkgray;
+  cursor: pointer;
+
+}
+
+.display-todo {
+  background-color: aliceblue;
+  overflow: scroll;
+  height: 550px;
+  margin-top: 20px;
+}
+
+.done {
+  background-color: green;
+  color: white;
+}

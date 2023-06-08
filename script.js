@@ -21,6 +21,7 @@ function writeUserData(title, description, endDate) {
     title: title,
     description: description,
     endDate: endDate,
+    done: false,
   });
 }
 
@@ -49,11 +50,8 @@ function addTodo() {
   }
 }
 
-function onClickTodoItem() {
-  this.classList.toggle("todo-done");
-}
-
-function displayTodoList(params) {
+function displayTodoList() {
+  //console.log(params);
   let displayList = document.querySelector(".display-todo");
   // Hämta data från en specifik sökväg i databasen
   ref.on(
@@ -61,17 +59,85 @@ function displayTodoList(params) {
     function (snapshot) {
       let data = snapshot.val();
       console.log(data);
-      for (let key in data) {
-        displayList.innerHTML = `<div class="display-things">
-        <h4>Email:</h4> <p class="header-display"> ${data["email"]} </p> 
-        <h4>Profile_picture: </h4>   <p class="header-display">${data["profile_picture"]}</p>
-          <h4>Username: </h4> <p class="header-display">${data["username"]}</p>
-          </div>`;
+      
+      // for (let key in data) {
+        displayList.innerHTML += `<div class="display-things">
+          <h4>Title:</h4> 
+          <p class="header-display"> ${data["title"]} </p> 
+          <h4>Description: </h4>   
+          <p class="header-display">${data["description"]}</p>
+          <h4>Date: </h4> 
+          <p class="header-display">${data["endDate"]}</p>
+          <button class="done-button">Done</button>
+          <button class="delete-button">Delete</button>
+          <button class="update-button">Update</button>
+        </div>`;
+      // }
+
+// ===== Delete-knappen/ deleteTodo =====
+
+      let deleteButtons = document.getElementsByClassName("delete-button");
+      for (let i = 0; i < deleteButtons.length; i++) {
+        deleteButtons[i].addEventListener("click", deleteTodo);
+      };
+
+// ===== Done-knappen/ done =====
+
+      let doneButtons = document.getElementsByClassName("done-button");
+      for (let i = 0; i < doneButtons.length; i++) {
+        doneButtons[i].addEventListener("click", doneTodo);
       }
+
+// ===== Update-knappen =====
+
+
+
+
     },
-    function (error) {
-      console.log("Fel vid hämtning av data: " + error.code);
-    }
+
+    // ...  ...
   );
 }
+
+// ===== "delete todo" function =====
+
+function deleteTodo() {
+  // borttagning av todo
+  console.log("Funktionen deleteTodo körs");
+
+  // Hämta referensen till förälderelementet som innehåller den klickade delete-knappen
+  let parentElement = this.parentElement;
+
+  // Ta bort hela förälderelementet från DOM
+  parentElement.remove();
+
+}  
+
+// ===== "markera todo som done" function=====
+
+function doneTodo() {
+  // Hämta referensen till förälderelementet som innehåller den klickade done-knappen
+  let parentElement = this.parentElement;
+
+  // Uppdatera klassen på "Done"-knappen för att markera uppgiften som klar
+  this.classList.add("done");
+
+  // Alternativt: Sätt done-attributet till true i databasen för att markera uppgiften som klar
+  let todoId = parentElement.getAttribute("data-todo-id");
+  database.ref("todos/" + todoId).update({ done: true });
+  console.log(todoId);
+}
+
+// ===== "update todo" function =====
+
+
+
+
+//     },
+//     function (error) {
+//       console.log("Fel vid hämtning av data: " + error.code);
+//     }
+//   );
+// }
+
 displayTodoList();
