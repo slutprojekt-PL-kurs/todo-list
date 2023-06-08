@@ -17,6 +17,8 @@ let database = firebase.database();
 let ref = database.ref("todos");
 
 function writeUserData(title, description, endDate) {
+
+  //Lägg till .flash funktion för att spara senaste tilllägget 
   ref.set({
     title: title,
     description: description,
