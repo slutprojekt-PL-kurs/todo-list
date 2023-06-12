@@ -162,4 +162,3 @@ function doneTodo() {
     console.log("Uppgiften är inte markerad som klar");
   }
 }
-
