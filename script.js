@@ -125,6 +125,9 @@ function displayTodoList() {
       let updateButton = document.createElement("button");
       updateButton.classList.add("update-button");
       updateButton.innerText = "Update";
+      // updateButton.addEventListener("click", function () {
+      //   updateTodo(key);
+      // });
 
       todoContent.appendChild(titleHeading);
       todoContent.appendChild(titleParagraph);
@@ -159,3 +162,4 @@ function doneTodo() {
     console.log("Uppgiften är inte markerad som klar");
   }
 }
+
