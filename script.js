@@ -95,7 +95,7 @@ function displayTodoList() {
       for (let i = 0; i < updateButtons.length; i++) {
         updateButtons[i].addEventListener("click", updateTodo);
       }
-    }
+    
 
 
   let newTodo = ref.push();
