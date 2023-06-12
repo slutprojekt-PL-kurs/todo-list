@@ -10,17 +10,11 @@ const firebaseConfig = {
   appId: "1:1089764169541:web:824a50162eab726448502c",
   measurementId: "G-ZHC77BMQQE",
 };
-
 firebase.initializeApp(firebaseConfig);
 
 let database = firebase.database();
 // Initialize Firebase
 let ref = database.ref("todos");
-
-
-
-
-// ===== Olga =====
 
 
 document.addEventListener("DOMContentLoaded", function () {
