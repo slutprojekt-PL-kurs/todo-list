@@ -97,7 +97,7 @@ function displayTodoList() {
       }
     
 
-)}
+}
   let newTodo = ref.push();
   let todoId = newTodo.key;
 
