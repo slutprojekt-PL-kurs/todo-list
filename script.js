@@ -10,6 +10,7 @@ const firebaseConfig = {
   appId: "1:1089764169541:web:824a50162eab726448502c",
   measurementId: "G-ZHC77BMQQE",
 };
+
 firebase.initializeApp(firebaseConfig);
 
 let database = firebase.database();
@@ -176,11 +177,6 @@ let ref = database.ref("todos");
 
 // ===== Olga =====
 
-
-// firebase.initializeApp(firebaseConfig);
-
-// let database = firebase.database();
-// let ref = database.ref("todos");
 
 document.addEventListener("DOMContentLoaded", function () {
   let todoBtn = document.getElementById("add-todo");
