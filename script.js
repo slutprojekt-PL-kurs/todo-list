@@ -15,6 +15,7 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 // Initialize Firebase
 
+
 const ref = database.ref("todos");
 function writeUserData(title, description, endDate) {
   const newTodo = ref.push();
@@ -27,9 +28,12 @@ function writeUserData(title, description, endDate) {
   });
 }
 
+
 document.addEventListener("DOMContentLoaded", function () {
   let todoBtn = document.getElementById("add-todo");
   todoBtn.addEventListener("click", addTodo);
+
+  displayTodoList();
 });
 
 function addTodo() {
@@ -37,19 +41,11 @@ function addTodo() {
   let description = document.getElementById("todo-desc").value;
   let date = document.getElementById("todo-date").value;
 
-  writeUserData(titleInput, description, date);
-  titleInput = "";
-  description = "";
-  date = "";
-  let todoTitle = titleInput.value;
-
-  if (todoTitle) {
-    let todoTitle = document.createElement("li");
-    todoTitle.innerText = todoTitle;
-    todoTitle.addEventListener("click", onClickTodoItem);
-    const todoList = document.getElementById("todo-list");
-    todoList.append(todoTitle);
+  if (titleInput === "" || description === "" || date === "") {
+    console.log("Var vänlig fyll i alla fält");
+    return;
   }
+
 }
 
 function displayTodoList() {
@@ -101,36 +97,132 @@ function displayTodoList() {
       }
     }
 
-    // ...  ...
-  );
+
+  let newTodo = ref.push();
+  let todoId = newTodo.key;
+
+  let todoData = {
+    title: titleInput,
+    description: description,
+    endDate: date,
+    done: false,
+  };
+
+  newTodo.set(todoData);
+
+  document.getElementById("todo-title").value = "";
+  document.getElementById("todo-desc").value = "";
+  document.getElementById("todo-date").value = "";
+
+
+  // let todoTitle = document.createElement("li");
+  // todoTitle.innerText = titleInput;
+  // //todoTitle.addEventListener("click", onClickTodoItem);
+  // const todoList = document.getElementById("todo-list");
+  // todoList.append(todoTitle);
+  // console.log(todoList);
 }
 
-// ===== "delete todo" function =====
+function displayTodoList() {
+  let displayList = document.querySelector(".display-todo");
 
-function deleteTodo() {
-  // borttagning av todo
-  console.log("Funktionen deleteTodo körs");
 
-  // Hämta referensen till förälderelementet som innehåller den klickade delete-knappen
-  let parentElement = this.parentElement;
+  //parentElement.remove();
 
-  // Ta bort hela förälderelementet från DOM
-  parentElement.remove();
+  ref.on("value", function (snapshot) {
+    let data = snapshot.val();
+    displayList.innerHTML = "";
+
+    for (let key in data) {
+      let todo = data[key];
+
+      let todoElement = document.createElement("div");
+      todoElement.classList.add("display-things");
+
+      let todoContent = document.createElement("div");
+      todoContent.classList.add("todoDiv");
+
+      let titleHeading = document.createElement("h4");
+      titleHeading.innerText = "Title:";
+      let titleParagraph = document.createElement("p");
+      titleParagraph.classList.add("header-display");
+      titleParagraph.innerText = todo.title;
+
+      let descriptionHeading = document.createElement("h4");
+      descriptionHeading.innerText = "Description:";
+      let descriptionParagraph = document.createElement("p");
+      descriptionParagraph.classList.add("header-display");
+      descriptionParagraph.innerText = todo.description;
+
+      let dateHeading = document.createElement("h4");
+      dateHeading.innerText = "Date:";
+      let dateParagraph = document.createElement("p");
+      dateParagraph.classList.add("header-display");
+      dateParagraph.innerText = todo.endDate;
+
+      // ===== testar att lägga till varning när slutdatum närnar sig =====
+
+      let currentDate = new Date();
+      let endDate = new Date(todo.endDate);
+      let timeDifference = endDate.getTime() - currentDate.getTime();
+      let daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+      if (daysDifference < 3) {
+        let warningMessage = document.createElement("p");
+        warningMessage.classList.add("warning-message");
+        warningMessage.innerText = "Slutdatum närmar sig!";
+        warningMessage.style.color = "orange";
+        dateParagraph.appendChild(warningMessage);
+      }
+
+   
+
+      let deleteButton = document.createElement("button");
+      deleteButton.classList.add("delete-button");
+      deleteButton.innerText = "Delete";
+      deleteButton.addEventListener("click", function () {
+        deleteTodo(key);
+      });
+
+      let doneCheckbox = document.createElement("input");
+      doneCheckbox.setAttribute("type", "checkbox");
+      doneCheckbox.classList.add("done-checkbox");
+      doneCheckbox.addEventListener("change", doneTodo);
+      doneCheckbox.setAttribute("data-todo-id", key);
+
+      let updateButton = document.createElement("button");
+      updateButton.classList.add("update-button");
+      updateButton.innerText = "Update";
+      // updateButton.addEventListener("click", function () {
+      //   updateTodo(key);
+      // });
+
+      todoContent.appendChild(titleHeading);
+      todoContent.appendChild(titleParagraph);
+      todoContent.appendChild(descriptionHeading);
+      todoContent.appendChild(descriptionParagraph);
+      todoContent.appendChild(dateHeading);
+      todoContent.appendChild(dateParagraph);
+      todoContent.appendChild(deleteButton);
+      todoContent.appendChild(doneCheckbox);
+      todoContent.appendChild(updateButton);
+
+      todoElement.appendChild(todoContent);
+      displayList.appendChild(todoElement);
+    }
+  });
+
 }
 
-// ===== "markera todo som done" function=====
+function deleteTodo(todoId) {
+  database.ref("todos/" + todoId).remove();
+}
 
 function doneTodo() {
-  // Hämta referensen till förälderelementet som innehåller den klickade done-knappen
   let parentElement = this.parentElement;
-
-  // Uppdatera klassen på "Done"-knappen för att markera uppgiften som klar
-  this.classList.add("done");
-
-  // Alternativt: Sätt done-attributet till true i databasen för att markera uppgiften som klar
-  let todoId = parentElement.getAttribute("data-todo-id");
-  database.ref("todos/" + todoId).update({ done: true });
+  let todoId = parentElement.querySelector(".done-checkbox").getAttribute("data-todo-id");
   console.log(todoId);
+
 }
 
 // ===== "update todo" function =====
@@ -210,3 +302,15 @@ function updateTodo(event) {
 // }
 
 displayTodoList();
+
+
+  if (this.checked) {
+    database.ref("todos/" + todoId).update({ done: true });
+    console.log("Uppgiften är markerad som klar");
+  } else {
+    database.ref("todos/" + todoId).update({ done: false });
+    console.log("Uppgiften är inte markerad som klar");
+  }
+}
+
+

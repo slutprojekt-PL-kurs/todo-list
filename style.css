@@ -56,9 +56,21 @@ li.todo-done {
   margin-top: 20px;
 }
 
-.done {
+.todoDiv {
+  border: 0.5px solid gray;
+  border-radius: 5px;
+  box-shadow: 2px 2px 8px 0px gray;
+  padding-bottom: 15px;
+}
+
+h4 {
+  margin-top: 30px;
+}
+
+/* .done {
   background-color: green;
   color: white;
+
 }
 #updateModal {
   display: none;
@@ -85,3 +97,16 @@ textarea {
   margin: 5px 50px;
   height: 100px;
 }
+
+} */
+
+.done-checkbox {
+  height: 45px;
+  width: 45px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px 0px gray;
+  
+}
+
