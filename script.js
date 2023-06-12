@@ -29,6 +29,11 @@ function addTodo() {
   let description = document.getElementById("todo-desc").value;
   let date = document.getElementById("todo-date").value;
 
+  if (titleInput === "" || description === "" || date === "") {
+    console.log("Var vänlig fyll i alla fält");
+    return;
+  }
+
   let newTodo = ref.push();
   let todoId = newTodo.key;
 
@@ -86,6 +91,23 @@ function displayTodoList() {
       let dateParagraph = document.createElement("p");
       dateParagraph.classList.add("header-display");
       dateParagraph.innerText = todo.endDate;
+
+      // ===== testar att lägga till varning när slutdatum närnar sig =====
+
+      let currentDate = new Date();
+      let endDate = new Date(todo.endDate);
+      let timeDifference = endDate.getTime() - currentDate.getTime();
+      let daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+      if (daysDifference < 3) {
+        let warningMessage = document.createElement("p");
+        warningMessage.classList.add("warning-message");
+        warningMessage.innerText = "Slutdatum närmar sig!";
+        warningMessage.style.color = "orange";
+        dateParagraph.appendChild(warningMessage);
+      }
+
+      // ===== ===== =====
 
       let deleteButton = document.createElement("button");
       deleteButton.classList.add("delete-button");
