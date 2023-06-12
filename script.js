@@ -12,9 +12,21 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-let database = firebase.database();
+const database = firebase.database();
 // Initialize Firebase
-let ref = database.ref("todos");
+
+
+const ref = database.ref("todos");
+function writeUserData(title, description, endDate) {
+  const newTodo = ref.push();
+  //Lägg till .flash funktion för att spara senaste tilllägget
+  newTodo.set({
+    title: title,
+    description: description,
+    endDate: endDate,
+    done: false,
+  });
+}
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -34,6 +46,58 @@ function addTodo() {
     return;
   }
 
+}
+
+function displayTodoList() {
+  //console.log(params);
+  let displayList = document.querySelector(".display-todo");
+  // Hämta data från en specifik sökväg i databasen
+  displayList.innerHTML = "";
+  ref.once(
+    "value",
+    function (snapshot) {
+      Object.keys(snapshot.val()).forEach((key) => {
+        let data = snapshot.val()[key];
+        console.log(data);
+
+        // for (let key in data) {
+        displayList.innerHTML += `<div id="${key}" class="display-things">
+          <h4>Title:</h4> 
+          <p class="header-display"> ${data["title"]} </p> 
+          <h4>Description: </h4>   
+          <p class="header-display">${data["description"]}</p>
+          <h4>Date: </h4> 
+          <p class="header-display">${data["endDate"]}</p>
+          <button class="done-button">Done</button>
+          <button class="delete-button">Delete</button>
+          <button class="update-button">Update</button>
+          </div>`;
+      });
+      // }
+
+      // ===== Delete-knappen/ deleteTodo =====
+
+      let deleteButtons = document.getElementsByClassName("delete-button");
+      for (let i = 0; i < deleteButtons.length; i++) {
+        deleteButtons[i].addEventListener("click", deleteTodo);
+      }
+
+      // ===== Done-knappen/ done =====
+
+      let doneButtons = document.getElementsByClassName("done-button");
+      for (let i = 0; i < doneButtons.length; i++) {
+        doneButtons[i].addEventListener("click", doneTodo);
+      }
+
+      // ===== Update-knappen =====
+
+      let updateButtons = document.getElementsByClassName("update-button");
+      for (let i = 0; i < updateButtons.length; i++) {
+        updateButtons[i].addEventListener("click", updateTodo);
+      }
+    }
+
+
   let newTodo = ref.push();
   let todoId = newTodo.key;
 
@@ -50,6 +114,7 @@ function addTodo() {
   document.getElementById("todo-desc").value = "";
   document.getElementById("todo-date").value = "";
 
+
   // let todoTitle = document.createElement("li");
   // todoTitle.innerText = titleInput;
   // //todoTitle.addEventListener("click", onClickTodoItem);
@@ -60,6 +125,9 @@ function addTodo() {
 
 function displayTodoList() {
   let displayList = document.querySelector(".display-todo");
+
+
+  //parentElement.remove();
 
   ref.on("value", function (snapshot) {
     let data = snapshot.val();
@@ -107,7 +175,7 @@ function displayTodoList() {
         dateParagraph.appendChild(warningMessage);
       }
 
-      // ===== ===== =====
+   
 
       let deleteButton = document.createElement("button");
       deleteButton.classList.add("delete-button");
@@ -143,6 +211,7 @@ function displayTodoList() {
       displayList.appendChild(todoElement);
     }
   });
+
 }
 
 function deleteTodo(todoId) {
@@ -154,6 +223,87 @@ function doneTodo() {
   let todoId = parentElement.querySelector(".done-checkbox").getAttribute("data-todo-id");
   console.log(todoId);
 
+}
+
+// ===== "update todo" function =====
+function updateTodo(event) {
+  const parent = event.target.parentNode;
+  const docId = parent.id;
+  const updateRef = firebase.database().ref("todos/" + docId);
+
+  const currentTitle = document.querySelector(
+    `#${docId} p:nth-of-type(1)`
+  ).innerText;
+  const currentDescription = document.querySelector(
+    `#${docId} p:nth-of-type(2)`
+  ).innerText;
+  const currentEndDate = document.querySelector(
+    `#${docId} p:nth-of-type(3)`
+  ).innerText;
+
+  //const currentTitle = document.querySelector(`#${docId} p`)[0].innerText;
+  //const currentDescription = document.querySelector(`#${docId} p`)[1].innerText;
+  //const currentEndDate = document.querySelector(`#${docId} p`)[2].innerText;
+  //Modal
+  const modal = document.getElementById("updateModal");
+  modal.style.display = "block";
+  const modalContent = document.getElementsByClassName("modal-content")[0];
+  const titleInput = document.createElement("input");
+  const descriptionInput = document.createElement("textarea");
+  const datePicker = document.createElement("input");
+  const updateBtn = document.createElement("button");
+  const cancelBtn = document.createElement("button");
+  updateBtn.innerText = "Update Changes";
+  cancelBtn.innerText = "Cancel";
+  titleInput.type = "text";
+  datePicker.type = "date";
+  titleInput.value = currentTitle;
+  descriptionInput.value = currentDescription;
+  datePicker.value = currentEndDate;
+  modalContent.appendChild(titleInput);
+  modalContent.appendChild(descriptionInput);
+  modalContent.appendChild(datePicker);
+  modalContent.appendChild(updateBtn);
+  modalContent.appendChild(cancelBtn);
+  cancelBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+  updateBtn.addEventListener("click", () => {
+    console.log(docId);
+
+    updateRef.once("value").then((snapshot) => {
+      const data = snapshot.val();
+
+      //let newtitle = prompt("Enter new title: ", data.title);
+
+      updateRef
+        .update({
+          title: titleInput.value,
+          description: descriptionInput.value,
+          endDate: datePicker.value,
+        })
+        .then(() => {
+          console.log("Document updated successfully.");
+        })
+        .catch((error) => {
+          console.error("Error updating document:", error);
+        });
+      modal.style.display = "none";
+      displayTodoList();
+    });
+  });
+}
+
+//     },
+//     function (error) {
+//       console.log("Fel vid hämtning av data: " + error.code);
+//     }
+//   );
+// }
+
+displayTodoList();
+
+
   if (this.checked) {
     database.ref("todos/" + todoId).update({ done: true });
     console.log("Uppgiften är markerad som klar");
@@ -162,4 +312,5 @@ function doneTodo() {
     console.log("Uppgiften är inte markerad som klar");
   }
 }
+
 

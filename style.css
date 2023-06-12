@@ -26,17 +26,19 @@ li.todo-done {
   color: gray;
 }
 
-.display-things{
+.display-things {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   margin: 1.5rem;
 }
-#header-display{
-font-size: x-large;
+#header-display {
+  font-size: x-large;
 }
 
-.done-button, .delete-button, .update-button {
+.done-button,
+.delete-button,
+.update-button {
   height: 30px;
   width: 30%;
   margin: 5px;
@@ -45,7 +47,6 @@ font-size: x-large;
   border-radius: 5px;
   border: solid 1px darkgray;
   cursor: pointer;
-
 }
 
 .display-todo {
@@ -69,6 +70,34 @@ h4 {
 /* .done {
   background-color: green;
   color: white;
+
+}
+#updateModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  width: 400px;
+  height: 500px;
+  background-color: aquamarine;
+  margin: 50px auto;
+}
+.modal-content {
+  display: block;
+  justify-content: center;
+
+  margin: 20px 10px;
+}
+.modal-content input textarea {
+  margin: auto 0;
+}
+textarea {
+  resize: none;
+  width: 200px;
+  margin: 5px 50px;
+  height: 100px;
+}
+
 } */
 
 .done-checkbox {
@@ -80,3 +109,4 @@ h4 {
   box-shadow: 1px 1px 5px 0px gray;
   
 }
+
