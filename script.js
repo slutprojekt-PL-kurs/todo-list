@@ -97,7 +97,7 @@ function displayTodoList() {
       }
     
 
-
+)}
   let newTodo = ref.push();
   let todoId = newTodo.key;
 
@@ -115,12 +115,6 @@ function displayTodoList() {
   document.getElementById("todo-date").value = "";
 
 
-  // let todoTitle = document.createElement("li");
-  // todoTitle.innerText = titleInput;
-  // //todoTitle.addEventListener("click", onClickTodoItem);
-  // const todoList = document.getElementById("todo-list");
-  // todoList.append(todoTitle);
-  // console.log(todoList);
 }
 
 function displayTodoList() {
@@ -294,12 +288,7 @@ function updateTodo(event) {
   });
 }
 
-//     },
-//     function (error) {
-//       console.log("Fel vid hämtning av data: " + error.code);
-//     }
-//   );
-// }
+
 
 displayTodoList();
 
@@ -311,6 +300,6 @@ displayTodoList();
     database.ref("todos/" + todoId).update({ done: false });
     console.log("Uppgiften är inte markerad som klar");
   }
-}
+
 
 
