@@ -70,8 +70,9 @@ h4 {
 /* .done {
   background-color: green;
   color: white;
-
+  
 }
+*/
 #updateModal {
   display: none;
   position: fixed;
@@ -98,7 +99,7 @@ textarea {
   height: 100px;
 }
 
-} */
+} 
 
 .done-checkbox {
   height: 45px;
