@@ -15,7 +15,6 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 // Initialize Firebase
 
-
 const ref = database.ref("todos");
 function writeUserData(title, description, endDate) {
   const newTodo = ref.push();
@@ -27,7 +26,6 @@ function writeUserData(title, description, endDate) {
     done: false,
   });
 }
-
 
 document.addEventListener("DOMContentLoaded", function () {
   let todoBtn = document.getElementById("add-todo");
@@ -45,9 +43,8 @@ function addTodo() {
     console.log("Var vänlig fyll i alla fält");
     return;
   }
-
 }
-
+/*
 function displayTodoList() {
   //console.log(params);
   let displayList = document.querySelector(".display-todo");
@@ -122,10 +119,9 @@ function displayTodoList() {
   // todoList.append(todoTitle);
   // console.log(todoList);
 }
-
+*/
 function displayTodoList() {
   let displayList = document.querySelector(".display-todo");
-
 
   //parentElement.remove();
 
@@ -141,6 +137,7 @@ function displayTodoList() {
 
       let todoContent = document.createElement("div");
       todoContent.classList.add("todoDiv");
+      todoContent.id = key;
 
       let titleHeading = document.createElement("h4");
       titleHeading.innerText = "Title:";
@@ -175,8 +172,6 @@ function displayTodoList() {
         dateParagraph.appendChild(warningMessage);
       }
 
-   
-
       let deleteButton = document.createElement("button");
       deleteButton.classList.add("delete-button");
       deleteButton.innerText = "Delete";
@@ -193,7 +188,7 @@ function displayTodoList() {
       let updateButton = document.createElement("button");
       updateButton.classList.add("update-button");
       updateButton.innerText = "Update";
-      // updateButton.addEventListener("click", function () {
+      updateButton.addEventListener("click", updateTodo);
       //   updateTodo(key);
       // });
 
@@ -211,7 +206,6 @@ function displayTodoList() {
       displayList.appendChild(todoElement);
     }
   });
-
 }
 
 function deleteTodo(todoId) {
@@ -220,9 +214,10 @@ function deleteTodo(todoId) {
 
 function doneTodo() {
   let parentElement = this.parentElement;
-  let todoId = parentElement.querySelector(".done-checkbox").getAttribute("data-todo-id");
+  let todoId = parentElement
+    .querySelector(".done-checkbox")
+    .getAttribute("data-todo-id");
   console.log(todoId);
-
 }
 
 // ===== "update todo" function =====
@@ -248,6 +243,7 @@ function updateTodo(event) {
   const modal = document.getElementById("updateModal");
   modal.style.display = "block";
   const modalContent = document.getElementsByClassName("modal-content")[0];
+  modalContent.innerHTML = "";
   const titleInput = document.createElement("input");
   const descriptionInput = document.createElement("textarea");
   const datePicker = document.createElement("input");
@@ -303,14 +299,10 @@ function updateTodo(event) {
 
 displayTodoList();
 
-
-  if (this.checked) {
-    database.ref("todos/" + todoId).update({ done: true });
-    console.log("Uppgiften är markerad som klar");
-  } else {
-    database.ref("todos/" + todoId).update({ done: false });
-    console.log("Uppgiften är inte markerad som klar");
-  }
+if (this.checked) {
+  database.ref("todos/" + todoId).update({ done: true });
+  console.log("Uppgiften är markerad som klar");
+} else {
+  database.ref("todos/" + todoId).update({ done: false });
+  console.log("Uppgiften är inte markerad som klar");
 }
-
-
