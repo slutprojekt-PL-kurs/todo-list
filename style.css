@@ -67,12 +67,6 @@ h4 {
   margin-top: 30px;
 }
 
-/* .done {
-  background-color: green;
-  color: white;
-  
-}
-*/
 #updateModal {
   display: none;
   position: fixed;
@@ -99,8 +93,6 @@ textarea {
   height: 100px;
 }
 
-} 
-
 .done-checkbox {
   height: 45px;
   width: 45px;
@@ -108,6 +100,4 @@ textarea {
   cursor: pointer;
   border-radius: 5px;
   box-shadow: 1px 1px 5px 0px gray;
-  
 }
-
