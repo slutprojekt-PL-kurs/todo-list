@@ -52,13 +52,6 @@ function addTodo() {
   document.getElementById("todo-title").value = "";
   document.getElementById("todo-desc").value = "";
   document.getElementById("todo-date").value = "";
-
-  // let todoTitle = document.createElement("li");
-  // todoTitle.innerText = titleInput;
-  // //todoTitle.addEventListener("click", onClickTodoItem);
-  // const todoList = document.getElementById("todo-list");
-  // todoList.append(todoTitle);
-  // console.log(todoList);
 }
 
 function displayTodoList() {
@@ -76,7 +69,7 @@ function displayTodoList() {
 
       let todoContent = document.createElement("div");
       todoContent.classList.add("todoDiv");
-
+      todoContent.id = key;
       let titleHeading = document.createElement("h4");
       titleHeading.innerText = "Title:";
       let titleParagraph = document.createElement("p");
@@ -110,7 +103,6 @@ function displayTodoList() {
         dateParagraph.appendChild(warningMessage);
       }
 
-      // ===== ===== =====
 
       let deleteButton = document.createElement("button");
       deleteButton.classList.add("delete-button");
@@ -128,10 +120,8 @@ function displayTodoList() {
       let updateButton = document.createElement("button");
       updateButton.classList.add("update-button");
       updateButton.innerText = "Update";
-      updateButton.addEventListener("click", function () {
-        updateTodo(key);
-      });
 
+      updateButton.addEventListener("click", updateTodo);
       todoContent.appendChild(titleHeading);
       todoContent.appendChild(titleParagraph);
       todoContent.appendChild(descriptionHeading);
@@ -151,10 +141,6 @@ function displayTodoList() {
   });
 }
 
-// function deleteTodo(todoId) {
-//   database.ref("todos/" + todoId).remove();
-// }
-
 function deleteTodo(todoId) {
   // ta bort todo från databasen
   database.ref("todos/" + todoId).remove();
@@ -169,22 +155,6 @@ function deleteTodo(todoId) {
     localStorage.setItem("markedTodoIds", JSON.stringify(markedTodoIds));
   }
 }
-
-
-// function doneTodo() {
-//   let parentElement = this.parentElement;
-//   let todoId = parentElement.querySelector(".done-checkbox").getAttribute("data-todo-id");
-//   console.log(todoId);
-
-//   if (this.checked) {
-//     database.ref("todos/" + todoId).update({ done: true });
-//     console.log("Uppgiften är markerad som klar");
-//   } else {
-//     database.ref("todos/" + todoId).update({ done: false });
-//     console.log("Uppgiften är inte markerad som klar");
-//   }
-// }
-
 let markedTodoIds = [];
 
 function doneTodo() {
@@ -229,4 +199,67 @@ function loadMarkedTodoIds() {
     updateTodoDisplay();
 
   }
+}
+function updateTodo(event) {
+  const parent = event.target.parentNode;
+  const docId = parent.id;
+  const updateRef = firebase.database().ref("todos/" + docId);
+
+  const currentTitle = document.querySelector(
+    `#${docId} p:nth-of-type(1)`
+  ).innerText;
+  const currentDescription = document.querySelector(
+    `#${docId} p:nth-of-type(2)`
+  ).innerText;
+  const currentEndDate = document.querySelector(
+    `#${docId} p:nth-of-type(3)`
+  ).innerText;
+
+  //Modal
+  const modal = document.getElementById("updateModal");
+  modal.style.display = "block";
+  const modalContent = document.getElementsByClassName("modal-content")[0];
+  modalContent.innerHTML = "";
+  const titleInput = document.createElement("input");
+  const descriptionInput = document.createElement("textarea");
+  const datePicker = document.createElement("input");
+  const updateBtn = document.createElement("button");
+  const cancelBtn = document.createElement("button");
+  updateBtn.innerText = "Update Changes";
+  cancelBtn.innerText = "Cancel";
+  titleInput.type = "text";
+  datePicker.type = "date";
+  titleInput.value = currentTitle;
+  descriptionInput.value = currentDescription;
+  datePicker.value = currentEndDate;
+  modalContent.appendChild(titleInput);
+  modalContent.appendChild(descriptionInput);
+  modalContent.appendChild(datePicker);
+  modalContent.appendChild(updateBtn);
+  modalContent.appendChild(cancelBtn);
+  cancelBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+  updateBtn.addEventListener("click", () => {
+    console.log(docId);
+
+    updateRef.once("value").then((snapshot) => {
+      const data = snapshot.val();
+
+      updateRef
+        .update({
+          title: titleInput.value,
+          description: descriptionInput.value,
+          endDate: datePicker.value,
+        })
+        .then(() => {
+          console.log("Document updated successfully.");
+        })
+        .catch((error) => {
+          console.error("Error updating document:", error);
+        });
+      modal.style.display = "none";
+      displayTodoList();
+    });
+  });
 }
