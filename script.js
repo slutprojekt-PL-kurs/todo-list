@@ -103,7 +103,6 @@ function displayTodoList() {
         dateParagraph.appendChild(warningMessage);
       }
 
-      // ===== ===== =====
 
       let deleteButton = document.createElement("button");
       deleteButton.classList.add("delete-button");
@@ -123,10 +122,6 @@ function displayTodoList() {
       updateButton.innerText = "Update";
 
       updateButton.addEventListener("click", updateTodo);
-      /* updateButton.addEventListener("click", function () {
-        updateTodo(key);
-      }); */
-
       todoContent.appendChild(titleHeading);
       todoContent.appendChild(titleParagraph);
       todoContent.appendChild(descriptionHeading);
@@ -146,8 +141,6 @@ function displayTodoList() {
   });
 }
 
-
-
 function deleteTodo(todoId) {
   // ta bort todo från databasen
   database.ref("todos/" + todoId).remove();
@@ -162,7 +155,6 @@ function deleteTodo(todoId) {
     localStorage.setItem("markedTodoIds", JSON.stringify(markedTodoIds));
   }
 }
-
 let markedTodoIds = [];
 
 function doneTodo() {
@@ -208,8 +200,6 @@ function loadMarkedTodoIds() {
 
   }
 }
-
-
 function updateTodo(event) {
   const parent = event.target.parentNode;
   const docId = parent.id;
